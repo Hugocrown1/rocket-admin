@@ -1,8 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export default function Menu() {
-    return (
-      <div className="bg-red-600">Hola</div>
-    )
-  }
-  
+  return <aside className="bg-[#212529] w-1/4">Hola</aside>;
+}
