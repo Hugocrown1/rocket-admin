@@ -2,15 +2,25 @@
 
 import Layout from "@/components/Layout";
 import { useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function NewProduct() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
 
-  const createProduct = () => {
+  const router = useRouter();
+
+  const createProduct = async (e) => {
     e.preventDefault();
+    const data = { title, description, price };
+    await axios.post("/api/products", data);
+
+    //Regresar a la pagina de productos
+    router.push("/products");
   };
+
   return (
     <Layout>
       <div className="flex flex-col gap-y-2">
