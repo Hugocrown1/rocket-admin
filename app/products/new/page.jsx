@@ -12,6 +12,7 @@ export default function NewProduct() {
 
   const router = useRouter();
 
+  //TODO: Manejo de errores
   const createProduct = async (e) => {
     e.preventDefault();
     const data = { title, description, price };

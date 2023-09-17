@@ -17,3 +17,9 @@ export async function POST(request) {
 
   return response.json(productDoc);
 }
+
+export async function GET(request) {
+  await mongooseConnect();
+
+  return response.json(await Product.find())
+}
