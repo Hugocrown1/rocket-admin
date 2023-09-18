@@ -20,6 +20,27 @@ export async function POST(request) {
 
 export async function GET(request) {
   await mongooseConnect();
+  const id = request.nextUrl.searchParams.get("id");
 
-  return response.json(await Product.find())
+  //Si se hace una solicitud con un query de búsqueda se regresa un producto, si no, se regresan todos los productos
+  if (id) {
+    return response.json(await Product.findById(id));
+  } else {
+    return response.json(await Product.find());
+  }
+}
+
+export async function PUT(request) {
+  await mongooseConnect();
+  const { title, description, price, _id } = await request.json();
+  await Product.updateOne({ _id }, { title, description, price });
+  return response.json(true);
+}
+
+export async function DELETE(request) {
+  await mongooseConnect();
+  const id = request.nextUrl.searchParams.get("id");
+  await Product.deleteOne({ _id: id });
+
+  return response.json(true);
 }

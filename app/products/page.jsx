@@ -4,23 +4,16 @@ import Layout from "@/components/Layout";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { IconEdit } from "@tabler/icons-react";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
 
 export default function Products() {
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/products')
-    .then( res => {
-      setProducts(res.data)
-      
-    }
-
-    )
-  
-    
-  }, [])
-    
+    axios.get("/api/products").then((res) => {
+      setProducts(res.data);
+    });
+  }, []);
 
   return (
     <Layout>
@@ -31,22 +24,26 @@ export default function Products() {
       <table className="basic">
         <thead>
           <tr>
-            <td>Nombre del producto</td>
+            <td className="text-white">Nombre del producto</td>
             <td></td>
           </tr>
         </thead>
         <tbody>
-          {products.map( (product, index) => (
+          {products.map((product, index) => (
             <tr key={index}>
               <td>{product.title}</td>
               <td>
                 <Link href={`/products/edit/${product._id}`}>
-                  <IconEdit size={19}/>
+                  <IconEdit size={19} />
                   Editar
+                </Link>
+                <Link href={`/products/delete/${product._id}`}>
+                  <IconTrash size={19} />
+                  Eliminar
                 </Link>
               </td>
             </tr>
-          ) )}
+          ))}
         </tbody>
       </table>
     </Layout>
