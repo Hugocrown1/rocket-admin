@@ -1,3 +1,4 @@
+import { IconUpload } from "@tabler/icons-react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -7,6 +8,7 @@ export default function ProductForm({
   title: existingTitle,
   description: existingDescription,
   price: existingPrice,
+  images,
 }) {
   const [title, setTitle] = useState(existingTitle || "");
   const [description, setDescription] = useState(existingDescription || "");
@@ -30,6 +32,20 @@ export default function ProductForm({
     router.push("/products");
   };
 
+  const uploadImages = async (e) => {
+    const files = e.target?.files;
+    if (files?.length > 0) {
+      const data = new FormData();
+
+      for (const file of files) {
+        data.append("file", file);
+      }
+
+      const response = await axios.post("/api/upload", data);
+      console.log(response.data);
+    }
+  };
+
   return (
     <form className="my-2" onSubmit={createProduct}>
       <label htmlFor="new_product">Nombre del producto</label>
@@ -40,6 +56,25 @@ export default function ProductForm({
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
+      {/* Fotos */}
+      <label htmlFor="photos">Fotos</label>
+      <div className="mb-2">
+        <label
+          htmlFor="photos"
+          className="flex flex-col items-center justify-center w-28 h-28 bg-slate-300 rounded-md text-gray-500 cursor-pointer"
+        >
+          <IconUpload />
+          Cargar
+          <input
+            id="photos"
+            type="file"
+            className="hidden"
+            onChange={uploadImages}
+          />
+        </label>
+        {!images?.length && <div>No hay fotos de este producto...</div>}
+      </div>
+
       <label htmlFor="description">Descripción</label>
       <textarea
         id="description"
