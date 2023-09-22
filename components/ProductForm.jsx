@@ -1,5 +1,6 @@
 import { IconUpload } from "@tabler/icons-react";
 import axios from "axios";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -8,11 +9,13 @@ export default function ProductForm({
   title: existingTitle,
   description: existingDescription,
   price: existingPrice,
-  images,
+  images: existingImages,
 }) {
   const [title, setTitle] = useState(existingTitle || "");
   const [description, setDescription] = useState(existingDescription || "");
   const [price, setPrice] = useState(existingPrice || "");
+
+  const [images, setImages] = useState(existingImages || "");
 
   const router = useRouter();
 
@@ -42,7 +45,10 @@ export default function ProductForm({
       }
 
       const response = await axios.post("/api/upload", data);
-      console.log(response.data);
+
+      setImages((oldImages) => {
+        return [...oldImages, response.data];
+      });
     }
   };
 
@@ -58,7 +64,18 @@ export default function ProductForm({
       />
       {/* Fotos */}
       <label htmlFor="photos">Fotos</label>
-      <div className="mb-2">
+      <div className="flex flex-row mb-2 space-x-2">
+        {!!images?.length &&
+          images.map((link, index) => (
+            <Image
+              className="rounded-md"
+              height={40}
+              width={110}
+              key={index}
+              src={link}
+              alt={`fotografía del producto numero ${index + 1}`}
+            />
+          ))}
         <label
           htmlFor="photos"
           className="flex flex-col items-center justify-center w-28 h-28 bg-slate-300 rounded-md text-gray-500 cursor-pointer"
