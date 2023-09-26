@@ -22,7 +22,7 @@ export default function ProductForm({
   //TODO: Manejo de errores
   const createProduct = async (e) => {
     e.preventDefault();
-    const data = { title, description, price };
+    const data = { title, description, price, images };
 
     if (_id) {
       //Actualizar producto
@@ -66,16 +66,22 @@ export default function ProductForm({
       <label htmlFor="photos">Fotos</label>
       <div className="flex flex-row mb-2 space-x-2">
         {!!images?.length &&
-          images.map((link, index) => (
-            <Image
-              className="rounded-md"
-              height={40}
-              width={110}
-              key={index}
-              src={link}
-              alt={`fotografía del producto numero ${index + 1}`}
-            />
-          ))}
+          images.map((link, index) => {
+            return (
+              <div
+                key={index}
+                className="relative h-28 w-28 inline-block rounded-md"
+              >
+                <Image
+                  className="rounded-md"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  src={link}
+                  alt={`fotografía del producto numero ${index + 1}`}
+                />
+              </div>
+            );
+          })}
         <label
           htmlFor="photos"
           className="flex flex-col items-center justify-center w-28 h-28 bg-slate-300 rounded-md text-gray-500 cursor-pointer"

@@ -21,7 +21,7 @@ export async function POST(request) {
   const ext = file.name.split(".").pop();
   const newFileName = Date.now() + "." + ext;
 
-  client.send(
+  await client.send(
     new PutObjectCommand({
       Bucket: BUCKET_NAME,
       Key: newFileName,

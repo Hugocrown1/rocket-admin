@@ -7,12 +7,13 @@ export async function POST(request) {
 
   const data = await request.json();
 
-  const { title, description, price } = data;
+  const { title, description, price, images } = data;
 
   const productDoc = await Product.create({
     title,
     description,
     price,
+    images,
   });
 
   return response.json(productDoc);
@@ -32,8 +33,8 @@ export async function GET(request) {
 
 export async function PUT(request) {
   await mongooseConnect();
-  const { title, description, price, _id } = await request.json();
-  await Product.updateOne({ _id }, { title, description, price });
+  const { title, description, price, images, _id } = await request.json();
+  await Product.updateOne({ _id }, { title, description, price, images });
   return response.json(true);
 }
 
