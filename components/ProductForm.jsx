@@ -1,8 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
+import { Spinner } from "@nextui-org/react";
 import { IconUpload } from "@tabler/icons-react";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ReactSortable } from "react-sortablejs";
 
 export default function ProductForm({
   _id,
@@ -14,6 +17,8 @@ export default function ProductForm({
   const [title, setTitle] = useState(existingTitle || "");
   const [description, setDescription] = useState(existingDescription || "");
   const [price, setPrice] = useState(existingPrice || "");
+
+  const [isUploading, setIsUploading] = useState(false);
 
   const [images, setImages] = useState(existingImages || "");
 
@@ -38,6 +43,7 @@ export default function ProductForm({
   const uploadImages = async (e) => {
     const files = e.target?.files;
     if (files?.length > 0) {
+      setIsUploading(true);
       const data = new FormData();
 
       for (const file of files) {
@@ -49,7 +55,12 @@ export default function ProductForm({
       setImages((oldImages) => {
         return [...oldImages, response.data];
       });
+      setIsUploading(false);
     }
+  };
+
+  const updateImagesOrder = (images) => {
+    setImages(images);
   };
 
   return (
@@ -65,23 +76,32 @@ export default function ProductForm({
       {/* Fotos */}
       <label htmlFor="photos">Fotos</label>
       <div className="flex flex-row mb-2 space-x-2">
-        {!!images?.length &&
-          images.map((link, index) => {
-            return (
-              <div
-                key={index}
-                className="relative h-28 w-28 inline-block rounded-md"
-              >
-                <Image
-                  className="rounded-md"
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  src={link}
-                  alt={`fotografía del producto numero ${index + 1}`}
-                />
-              </div>
-            );
-          })}
+        <ReactSortable
+          className="flex space-x-2"
+          list={images}
+          setList={updateImagesOrder}
+        >
+          {!!images?.length &&
+            images.map((link, index) => {
+              return (
+                <div
+                  key={index}
+                  className="relative h-28 w-28 inline-block rounded-md"
+                >
+                  <img
+                    className="rounded-md"
+                    src={link}
+                    alt={`fotografía del producto numero ${index + 1}`}
+                  />
+                </div>
+              );
+            })}
+        </ReactSortable>
+        {isUploading && (
+          <div className="flex relative h-28 w-28 items-center justify-center">
+            <Spinner size="lg" color="primary"></Spinner>
+          </div>
+        )}
         <label
           htmlFor="photos"
           className="flex flex-col items-center justify-center w-28 h-28 bg-slate-300 rounded-md text-gray-500 cursor-pointer"
@@ -95,7 +115,6 @@ export default function ProductForm({
             onChange={uploadImages}
           />
         </label>
-        {!images?.length && <div>No hay fotos de este producto...</div>}
       </div>
 
       <label htmlFor="description">Descripción</label>
