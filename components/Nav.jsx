@@ -1,6 +1,7 @@
 import {
   IconArmchair2,
   IconBoxSeam,
+  IconCategory,
   IconRocket,
   IconSettings,
   IconTruckDelivery,
@@ -19,6 +20,11 @@ export default function Nav() {
       route: "/products",
       name: "Productos",
       icon: <IconBoxSeam />,
+    },
+    {
+      route: "/categories",
+      name: "Categorías",
+      icon: <IconCategory />,
     },
     {
       route: "/orders",

@@ -1,20 +1,22 @@
 "use client";
 
 import Nav from "@/components/Nav";
+import { Spinner } from "@nextui-org/react";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function Layout({ children }) {
-  const { data: session } = useSession();
+  const { status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/login");
+    },
+  });
 
-  if (!session) {
+  if (status === "loading") {
     return (
-      <div className="flex bg-blue-950 w-screen h-screen items-center justify-center ">
-        <button
-          onClick={() => signIn("google")}
-          className="bg-white text-black p-4 rounded-md"
-        >
-          Iniciar sesión con Google
-        </button>
+      <div className="fixed inset-0 flex items-center justify-center z-50">
+        <Spinner />
       </div>
     );
   }
