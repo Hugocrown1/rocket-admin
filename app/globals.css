@@ -2,13 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-input {
+input, textarea, input, select {
   @apply bg-gray-50 border outline-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
 }
 
-textarea {
-  @apply bg-gray-50 border outline-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-}
 
 h1 {
   @apply text-2xl
@@ -38,6 +35,6 @@ table.basic tr td {
   @apply border p-1
 }
 
-table.basic a {
+table.basic a, button {
   @apply bg-blue-700 hover:bg-blue-800 text-white text-sm p-1 px-2 mr-2 rounded-md inline-flex gap-1 items-center
 }

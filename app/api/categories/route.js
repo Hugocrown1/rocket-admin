@@ -4,12 +4,22 @@ import { NextResponse as response } from "next/server";
 
 export async function POST(request) {
   await mongooseConnect();
-  const { name } = await request.json();
-  const categoryDoc = await Category.create({ name });
+  const { name, parentCategory } = await request.json();
+  const categoryDoc = await Category.create({ name, parent: parentCategory });
   return response.json(categoryDoc);
 }
 
 export async function GET(request) {
   await mongooseConnect();
-  return response.json(await Category.find());
+  return response.json(await Category.find().populate("parent"));
+}
+
+export async function PUT(request) {
+  await mongooseConnect();
+  const { name, parentCategory, _id } = await request.json();
+  const categoryDoc = await Category.updateOne(
+    { _id },
+    { name, parent: parentCategory }
+  );
+  return response.json(categoryDoc);
 }

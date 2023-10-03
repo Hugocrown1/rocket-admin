@@ -38,7 +38,7 @@ export default function Nav() {
     },
   ];
   return (
-    <aside className="bg-[#0a0908] w-[16%]">
+    <aside className="bg-[#0a0908] min-w-fit w-[16%]">
       {/* Banner */}
       <Link
         href={"/"}
