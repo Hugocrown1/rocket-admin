@@ -4,8 +4,20 @@ import Layout from "@/components/Layout";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+} from "@nextui-org/react";
 
 const Categories = () => {
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+
+  const [deletedCategory, setDeletedCategory] = useState(null);
   const [editedCategory, setEditedCategory] = useState(null);
   const [name, setName] = useState("");
   const [categories, setCategories] = useState([]);
@@ -16,6 +28,8 @@ const Categories = () => {
       setCategories(result.data);
     });
   };
+
+  //TODO: Arreglar bug de crear categorías sin padre
   const saveCategory = async (e) => {
     e.preventDefault();
     const data = { name, parentCategory };
@@ -37,6 +51,18 @@ const Categories = () => {
     setParentCategory(category.parent?._id);
   };
 
+  const openModal = (category) => {
+    setDeletedCategory(category);
+    onOpen();
+  };
+
+  const deleteCategory = async () => {
+    await axios.delete(`/api/categories?id=${deletedCategory._id}`);
+    fetchCategories();
+    setDeletedCategory(null);
+    onClose();
+  };
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -44,6 +70,36 @@ const Categories = () => {
   return (
     <Layout>
       <h1>Categorías</h1>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>Eliminar categoría</ModalHeader>
+              <ModalBody className="text-center">
+                ¿Esta seguro que quiere eliminar la categoría{" "}
+                {deletedCategory?.name}?
+              </ModalBody>
+              <ModalFooter className="flex justify-center">
+                <Button
+                  className="hover:bg-zinc-500 bg-zinc-600 text-white"
+                  onPress={() => {
+                    setDeletedCategory(null);
+                    onClose();
+                  }}
+                >
+                  No
+                </Button>
+                <Button
+                  className="text-white bg-[#d90429] hover:bg-[#9e3345] "
+                  onPress={deleteCategory}
+                >
+                  Si, eliminar
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
       <form
         onSubmit={saveCategory}
         className="flex flex-col space-y-2 mt-2 w-full"
@@ -97,7 +153,7 @@ const Categories = () => {
                   <button onClick={() => editCategory(category)}>
                     <IconEdit /> Editar
                   </button>
-                  <button>
+                  <button onClick={() => openModal(category)}>
                     <IconTrash /> Eliminar
                   </button>
                 </td>

@@ -23,3 +23,11 @@ export async function PUT(request) {
   );
   return response.json(categoryDoc);
 }
+
+export async function DELETE(request) {
+  await mongooseConnect();
+  const _id = request.nextUrl.searchParams.get("id");
+
+  await Category.deleteOne({ _id });
+  return response.json(true);
+}
