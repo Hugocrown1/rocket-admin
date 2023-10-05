@@ -4,7 +4,7 @@ import { IconUpload } from "@tabler/icons-react";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ReactSortable } from "react-sortablejs";
 
 export default function ProductForm({
@@ -13,10 +13,12 @@ export default function ProductForm({
   description: existingDescription,
   price: existingPrice,
   images: existingImages,
+  category: existingCategory,
 }) {
   const [title, setTitle] = useState(existingTitle || "");
   const [description, setDescription] = useState(existingDescription || "");
   const [price, setPrice] = useState(existingPrice || "");
+  const [category, setCategory] = useState(existingCategory || "");
 
   const [isUploading, setIsUploading] = useState(false);
 
@@ -24,10 +26,18 @@ export default function ProductForm({
 
   const router = useRouter();
 
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    axios.get("/api/categories").then((result) => {
+      setCategories(result.data);
+    });
+  }, []);
+
   //TODO: Manejo de errores
   const createProduct = async (e) => {
     e.preventDefault();
-    const data = { title, description, price, images };
+    const data = { title, description, price, images, category };
 
     if (_id) {
       //Actualizar producto
@@ -73,6 +83,21 @@ export default function ProductForm({
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
+      <label htmlFor="category-select">Categoría</label>
+      <select
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        name="category"
+        id="category-select"
+      >
+        <option value="">Sin categoría</option>
+        {categories.length > 0 &&
+          categories.map((category, index) => (
+            <option key={index} value={category._id}>
+              {category.name}
+            </option>
+          ))}
+      </select>
       {/* Fotos */}
       <label htmlFor="photos">Fotos</label>
       <div className="flex flex-row mb-2 space-x-2">

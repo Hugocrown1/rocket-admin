@@ -22,6 +22,7 @@ const Categories = () => {
   const [name, setName] = useState("");
   const [categories, setCategories] = useState([]);
   const [parentCategory, setParentCategory] = useState("");
+  const [properties, setProperties] = useState([]);
 
   const fetchCategories = () => {
     axios.get("/api/categories").then((result) => {
@@ -62,6 +63,36 @@ const Categories = () => {
     setDeletedCategory(null);
     onClose();
   };
+  const addProperty = () => {
+    setProperties((prev) => {
+      return [...prev, { name: "", values: "" }];
+    });
+  };
+
+  const handlePropertyNameChange = (index, property, newName) => {
+    setProperties((prev) => {
+      const properties = [...prev];
+      properties[index].name = newName;
+      return properties;
+    });
+  };
+
+  const handlePropertyValuesChange = (index, property, newValues) => {
+    setProperties((prev) => {
+      const properties = [...prev];
+      properties[index].values = newValues;
+      return properties;
+    });
+  };
+
+  const removeProperty = (indexToRemove) => {
+    setProperties((prev) => {
+      const newProperties = [...prev];
+      return newProperties.filter(
+        (property, propertyIndex) => propertyIndex !== indexToRemove
+      );
+    });
+  };
 
   useEffect(() => {
     fetchCategories();
@@ -75,9 +106,11 @@ const Categories = () => {
           {(onClose) => (
             <>
               <ModalHeader>Eliminar categoría</ModalHeader>
-              <ModalBody className="text-center">
-                ¿Esta seguro que quiere eliminar la categoría{" "}
-                {deletedCategory?.name}?
+              <ModalBody>
+                <p className="text-center">
+                  ¿Esta seguro que quiere eliminar la categoría
+                  <span className="font-bold"> {deletedCategory?.name}</span>?
+                </p>
               </ModalBody>
               <ModalFooter className="flex justify-center">
                 <Button
@@ -131,6 +164,37 @@ const Categories = () => {
               ))}
           </select>
         </div>
+        <label htmlFor="properties">Propiedades</label>
+        {properties.length > 0 &&
+          properties.map((property, index) => (
+            <div key={index} className="flex space-x-1 items-center">
+              <input
+                type="text"
+                placeholder="Nombre de la propiedad (Ej: color)"
+                value={property.name}
+                onChange={(e) =>
+                  handlePropertyNameChange(index, property, e.target.value)
+                }
+              />
+              <input
+                type="text"
+                placeholder="Valores, separados por coma"
+                onChange={(e) =>
+                  handlePropertyValuesChange(index, property, e.target.value)
+                }
+                value={property.values}
+              />
+              <Button
+                onClick={() => removeProperty(index)}
+                className="text-white bg-[#d90429] hover:bg-[#9e3345] "
+              >
+                Borrar
+              </Button>
+            </div>
+          ))}
+        <Button className="hover:bg-slate-500 w-fit" onClick={addProperty}>
+          Agregar nueva propiedad...
+        </Button>
         <button type="submit" className="primary-button w-fit h-fit">
           Guardar
         </button>
