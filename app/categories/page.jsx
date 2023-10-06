@@ -33,7 +33,15 @@ const Categories = () => {
   //TODO: Arreglar bug de crear categorías sin padre
   const saveCategory = async (e) => {
     e.preventDefault();
-    const data = { name, parentCategory };
+    const data = {
+      name,
+      parentCategory,
+      properties: properties.map((property) => ({
+        name: property.name,
+        values: property.values.split(","),
+      })),
+    };
+
     if (editedCategory) {
       data._id = editedCategory._id;
       await axios.put("/api/categories", data);
@@ -43,6 +51,8 @@ const Categories = () => {
       await axios.post("/api/categories", data);
     }
     setName("");
+    setParentCategory("");
+    setProperties([]);
     fetchCategories();
   };
 
@@ -50,6 +60,13 @@ const Categories = () => {
     setEditedCategory(category);
     setName(category.name);
     setParentCategory(category.parent?._id);
+
+    setProperties(
+      category.properties.map(({ name, values }) => ({
+        name,
+        values: values.join(","),
+      }))
+    );
   };
 
   const openModal = (category) => {
@@ -57,11 +74,13 @@ const Categories = () => {
     onOpen();
   };
 
+  //TODO: Arreglar mensaje de error al eliminar una categoría sin padre
   const deleteCategory = async () => {
     await axios.delete(`/api/categories?id=${deletedCategory._id}`);
-    fetchCategories();
-    setDeletedCategory(null);
     onClose();
+    fetchCategories();
+
+    setDeletedCategory(null);
   };
   const addProperty = () => {
     setProperties((prev) => {
@@ -114,6 +133,12 @@ const Categories = () => {
               </ModalBody>
               <ModalFooter className="flex justify-center">
                 <Button
+                  className="text-white bg-[#d90429] hover:bg-[#9e3345] "
+                  onPress={deleteCategory}
+                >
+                  Si, eliminar
+                </Button>
+                <Button
                   className="hover:bg-zinc-500 bg-zinc-600 text-white"
                   onPress={() => {
                     setDeletedCategory(null);
@@ -121,12 +146,6 @@ const Categories = () => {
                   }}
                 >
                   No
-                </Button>
-                <Button
-                  className="text-white bg-[#d90429] hover:bg-[#9e3345] "
-                  onPress={deleteCategory}
-                >
-                  Si, eliminar
                 </Button>
               </ModalFooter>
             </>
@@ -195,36 +214,53 @@ const Categories = () => {
         <Button className="hover:bg-slate-500 w-fit" onClick={addProperty}>
           Agregar nueva propiedad...
         </Button>
-        <button type="submit" className="primary-button w-fit h-fit">
-          Guardar
-        </button>
+        <div className="flex ">
+          <button type="submit" className="primary-button w-fit h-fit">
+            Guardar
+          </button>
+          {editedCategory && (
+            <button
+              className="red-button w-fit"
+              onClick={() => {
+                setEditedCategory(null);
+                setName("");
+                setParentCategory("");
+                setProperties([]);
+              }}
+            >
+              Cancelar
+            </button>
+          )}
+        </div>
       </form>
-      <table className="basic text-white">
-        <thead>
-          <tr>
-            <td>Nombre de la categoría</td>
-            <td>Categoría padre</td>
-            <td></td>
-          </tr>
-        </thead>
-        <tbody className="text-black">
-          {categories.length > 0 &&
-            categories.map((category, index) => (
-              <tr key={index}>
-                <td>{category.name}</td>
-                <td>{category.parent?.name}</td>
-                <td>
-                  <button onClick={() => editCategory(category)}>
-                    <IconEdit /> Editar
-                  </button>
-                  <button onClick={() => openModal(category)}>
-                    <IconTrash /> Eliminar
-                  </button>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+      {!editedCategory && (
+        <table className="basic text-white">
+          <thead>
+            <tr>
+              <td>Nombre de la categoría</td>
+              <td>Categoría padre</td>
+              <td></td>
+            </tr>
+          </thead>
+          <tbody className="text-black">
+            {categories.length > 0 &&
+              categories.map((category, index) => (
+                <tr key={index}>
+                  <td>{category.name}</td>
+                  <td>{category.parent?.name}</td>
+                  <td>
+                    <button onClick={() => editCategory(category)}>
+                      <IconEdit /> Editar
+                    </button>
+                    <button onClick={() => openModal(category)}>
+                      <IconTrash /> Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      )}
     </Layout>
   );
 };
