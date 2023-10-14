@@ -2,10 +2,13 @@ import {
   IconArmchair2,
   IconBoxSeam,
   IconCategory,
+  IconLogout2,
+  IconPower,
   IconRocket,
   IconSettings,
   IconTruckDelivery,
 } from "@tabler/icons-react";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 
@@ -58,6 +61,12 @@ export default function Nav() {
             {item.icon} {item.name}
           </Link>
         ))}
+        <button
+          onClick={signOut}
+          className="flex flex-row gap-x-2 p-2 rounded-md w-full hover:bg-[#ffffff3d]"
+        >
+          <IconLogout2 /> Cerrar sesión
+        </button>
       </nav>
     </aside>
   );

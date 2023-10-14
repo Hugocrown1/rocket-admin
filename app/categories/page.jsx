@@ -74,10 +74,10 @@ const Categories = () => {
     onOpen();
   };
 
-  //TODO: Arreglar mensaje de error al eliminar una categoría sin padre
+  //4:52:00
   const deleteCategory = async () => {
     await axios.delete(`/api/categories?id=${deletedCategory._id}`);
-    onClose();
+
     fetchCategories();
 
     setDeletedCategory(null);
@@ -122,34 +122,33 @@ const Categories = () => {
       <h1>Categorías</h1>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader>Eliminar categoría</ModalHeader>
-              <ModalBody>
-                <p className="text-center">
-                  ¿Esta seguro que quiere eliminar la categoría
-                  <span className="font-bold"> {deletedCategory?.name}</span>?
-                </p>
-              </ModalBody>
-              <ModalFooter className="flex justify-center">
-                <Button
-                  className="text-white bg-[#d90429] hover:bg-[#9e3345] "
-                  onPress={deleteCategory}
-                >
-                  Si, eliminar
-                </Button>
-                <Button
-                  className="hover:bg-zinc-500 bg-zinc-600 text-white"
-                  onPress={() => {
-                    setDeletedCategory(null);
-                    onClose();
-                  }}
-                >
-                  No
-                </Button>
-              </ModalFooter>
-            </>
-          )}
+          <ModalHeader>Eliminar categoría</ModalHeader>
+          <ModalBody>
+            <p className="text-center">
+              ¿Esta seguro que quiere eliminar la categoría
+              <span className="font-bold"> {deletedCategory?.name}</span>?
+            </p>
+          </ModalBody>
+          <ModalFooter className="flex justify-center">
+            <Button
+              className="text-white bg-[#d90429] hover:bg-[#9e3345] "
+              onClick={() => {
+                deleteCategory();
+                onClose();
+              }}
+            >
+              Si, eliminar
+            </Button>
+            <Button
+              className="hover:bg-zinc-500 bg-zinc-600 text-white"
+              onClick={() => {
+                setDeletedCategory(null);
+                onClose();
+              }}
+            >
+              No
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
       <form
@@ -249,10 +248,18 @@ const Categories = () => {
                   <td>{category.name}</td>
                   <td>{category.parent?.name}</td>
                   <td>
-                    <button onClick={() => editCategory(category)}>
+                    <button
+                      className="bg-blue-700 hover:bg-blue-800 text-white text-sm p-1 px-2 mr-2 rounded-md inline-flex gap-1 items-center
+                    "
+                      onClick={() => editCategory(category)}
+                    >
                       <IconEdit /> Editar
                     </button>
-                    <button onClick={() => openModal(category)}>
+                    <button
+                      className="bg-blue-700 hover:bg-blue-800 text-white text-sm p-1 px-2 mr-2 rounded-md inline-flex gap-1 items-center
+                    "
+                      onClick={() => openModal(category)}
+                    >
                       <IconTrash /> Eliminar
                     </button>
                   </td>

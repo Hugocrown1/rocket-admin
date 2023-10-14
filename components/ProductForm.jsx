@@ -14,11 +14,16 @@ export default function ProductForm({
   price: existingPrice,
   images: existingImages,
   category: existingCategory,
+  properties: assignedProperties,
 }) {
   const [title, setTitle] = useState(existingTitle || "");
   const [description, setDescription] = useState(existingDescription || "");
   const [price, setPrice] = useState(existingPrice || "");
   const [category, setCategory] = useState(existingCategory || "");
+
+  const [productProperties, setProductProperties] = useState(
+    assignedProperties || {}
+  );
 
   const [isUploading, setIsUploading] = useState(false);
 
@@ -35,9 +40,16 @@ export default function ProductForm({
   }, []);
 
   //TODO: Manejo de errores
-  const createProduct = async (e) => {
+  const saveProduct = async (e) => {
     e.preventDefault();
-    const data = { title, description, price, images, category };
+    const data = {
+      title,
+      description,
+      price,
+      images,
+      category,
+      properties: productProperties,
+    };
 
     if (_id) {
       //Actualizar producto
@@ -73,8 +85,31 @@ export default function ProductForm({
     setImages(images);
   };
 
+  const setProductProp = (propName, value) => {
+    setProductProperties((prev) => {
+      const newProductProps = { ...prev };
+      newProductProps[propName] = value;
+      return newProductProps;
+    });
+  };
+
+  const propertiesToFill = [];
+
+  if (categories.length > 0 && category) {
+    let categoryInfo = categories.find(({ _id }) => _id === category);
+    propertiesToFill.push(...categoryInfo.properties);
+
+    while (categoryInfo?.parent?._id) {
+      const parentCategory = categories.find(
+        ({ _id }) => _id === categoryInfo?.parent?._id
+      );
+      propertiesToFill.push(...parentCategory.properties);
+      categoryInfo = parentCategory;
+    }
+  }
+
   return (
-    <form className="my-2" onSubmit={createProduct}>
+    <form className="my-2" onSubmit={saveProduct}>
       <label htmlFor="new_product">Nombre del producto</label>
       <input
         id="new_product"
@@ -98,6 +133,25 @@ export default function ProductForm({
             </option>
           ))}
       </select>
+      <label htmlFor="properties-select">Propiedades</label>
+      {propertiesToFill.length > 0 &&
+        propertiesToFill.map((property, index) => (
+          <div className="flex gap-1 my-2 items-center" key={index}>
+            <div>{property.name}</div>
+            <select
+              value={productProperties[property.name]}
+              onChange={(e) => setProductProp(property.name, e.target.value)}
+              name="properties"
+              id="properties"
+            >
+              {property.values.map((value, index) => (
+                <option key={index} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </div>
+        ))}
       {/* Fotos */}
       <label htmlFor="photos">Fotos</label>
       <div className="flex flex-row mb-2 space-x-2">
