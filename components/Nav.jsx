@@ -40,6 +40,8 @@ export default function Nav() {
       icon: <IconSettings />,
     },
   ];
+
+  //5:20:00
   return (
     <aside className="bg-[#0a0908] min-w-fit w-[16%]">
       {/* Banner */}

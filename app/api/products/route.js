@@ -2,8 +2,11 @@ import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
 import { NextResponse as response } from "next/server";
 
+import { isAdminRequest } from "../auth/[...nextauth]/route";
+
 export async function POST(request) {
   await mongooseConnect();
+  await isAdminRequest();
 
   const data = await request.json();
 
@@ -23,6 +26,8 @@ export async function POST(request) {
 
 export async function GET(request) {
   await mongooseConnect();
+  await isAdminRequest();
+
   const id = request.nextUrl.searchParams.get("id");
 
   //Si se hace una solicitud con un query de búsqueda se regresa un producto, si no, se regresan todos los productos
@@ -44,7 +49,7 @@ export async function PUT(request) {
   return response.json(true);
 }
 
-export async function DELETE(request) {
+export async function DELETE() {
   await mongooseConnect();
   const id = request.nextUrl.searchParams.get("id");
   await Product.deleteOne({ _id: id });

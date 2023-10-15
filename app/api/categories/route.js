@@ -1,9 +1,12 @@
 import { mongooseConnect } from "@/lib/mongoose";
 import { Category } from "@/models/Category";
+
 import { NextResponse as response } from "next/server";
+import { isAdminRequest } from "../auth/[...nextauth]/route";
 
 export async function POST(request) {
   await mongooseConnect();
+  await isAdminRequest();
   const { name, parentCategory, properties } = await request.json();
   const categoryDoc = await Category.create({
     name,
@@ -15,6 +18,7 @@ export async function POST(request) {
 
 export async function GET(request) {
   await mongooseConnect();
+  await isAdminRequest();
   return response.json(await Category.find().populate("parent"));
 }
 
