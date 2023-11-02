@@ -133,7 +133,10 @@ export default function ProductForm({
             </option>
           ))}
       </select>
-      <label htmlFor="properties-select">Propiedades</label>
+
+      {propertiesToFill.length > 0 && (
+        <label htmlFor="properties-select">Propiedades</label>
+      )}
       {propertiesToFill.length > 0 &&
         propertiesToFill.map((property, index) => (
           <div className="flex gap-1 my-2 items-center" key={index}>

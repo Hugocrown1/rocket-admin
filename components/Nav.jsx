@@ -41,7 +41,7 @@ export default function Nav() {
     },
   ];
 
-  //5:20:00
+  //5:30:00
   return (
     <aside className="bg-[#0a0908] min-w-fit w-[16%]">
       {/* Banner */}
@@ -64,7 +64,12 @@ export default function Nav() {
           </Link>
         ))}
         <button
-          onClick={signOut}
+          onClick={() =>
+            signOut({
+              redirect: true,
+              callbackUrl: "/",
+            })
+          }
           className="flex flex-row gap-x-2 p-2 rounded-md w-full hover:bg-[#ffffff3d]"
         >
           <IconLogout2 /> Cerrar sesión

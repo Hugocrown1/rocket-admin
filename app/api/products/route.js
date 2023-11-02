@@ -5,54 +5,87 @@ import { NextResponse as response } from "next/server";
 import { isAdminRequest } from "../auth/[...nextauth]/route";
 
 export async function POST(request) {
-  await mongooseConnect();
-  await isAdminRequest();
+  try {
+    await isAdminRequest();
+    await mongooseConnect();
+    const data = await request.json();
 
-  const data = await request.json();
+    const { title, description, price, images, category, properties } = data;
 
-  const { title, description, price, images, category, properties } = data;
+    const productDoc = await Product.create({
+      title,
+      description,
+      price,
+      images,
+      category,
+      properties,
+    });
 
-  const productDoc = await Product.create({
-    title,
-    description,
-    price,
-    images,
-    category,
-    properties,
-  });
-
-  return response.json(productDoc);
+    return response.json(productDoc);
+  } catch (error) {
+    if (error === "not admin") {
+      return response.json({ error: "Not authorized" }, { status: 401 });
+    } else {
+      return response.json({ error: "Something went wrong" }, { status: 500 });
+    }
+  }
 }
 
 export async function GET(request) {
-  await mongooseConnect();
-  await isAdminRequest();
+  try {
+    await isAdminRequest();
+    await mongooseConnect();
 
-  const id = request.nextUrl.searchParams.get("id");
+    const id = request.nextUrl.searchParams.get("id");
 
-  //Si se hace una solicitud con un query de búsqueda se regresa un producto, si no, se regresan todos los productos
-  if (id) {
-    return response.json(await Product.findById(id));
-  } else {
-    return response.json(await Product.find());
+    if (id) {
+      return response.json(await Product.findById(id));
+    } else {
+      return response.json(await Product.find());
+    }
+  } catch (error) {
+    if (error === "not admin") {
+      return response.json({ error: "Not authorized" }, { status: 401 });
+    } else {
+      return response.json({ error: "Something went wrong" }, { status: 500 });
+    }
   }
 }
 
 export async function PUT(request) {
-  await mongooseConnect();
-  const { title, description, price, images, category, properties, _id } =
-    await request.json();
-  await Product.updateOne(
-    { _id },
-    { title, description, price, images, category, properties }
-  );
-  return response.json(true);
+  try {
+    await isAdminRequest();
+    await mongooseConnect();
+
+    const { title, description, price, images, category, properties, _id } =
+      await request.json();
+    const updatedProduct = await Product.updateOne(
+      { _id },
+      { title, description, price, images, category, properties }
+    );
+    return response.json(updatedProduct);
+  } catch (error) {
+    if (error === "not admin") {
+      return response.json({ error: "Not authorized" }, { status: 401 });
+    } else {
+      return response.json({ error: "Something went wrong" }, { status: 500 });
+    }
+  }
 }
 
 export async function DELETE() {
-  await mongooseConnect();
-  const id = request.nextUrl.searchParams.get("id");
-  await Product.deleteOne({ _id: id });
+  try {
+    await isAdminRequest();
+    await mongooseConnect();
+    const id = request.nextUrl.searchParams.get("id");
+    const deletedProduct = await Product.deleteOne({ _id: id });
 
-  return response.json(true);
+    return response.json(deletedProduct);
+  } catch (error) {
+    if (error === "not admin") {
+      return response.json({ error: "Not authorized" }, { status: 401 });
+    } else {
+      return response.json({ error: "Something went wrong" }, { status: 500 });
+    }
+  }
 }

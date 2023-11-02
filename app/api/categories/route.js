@@ -5,37 +5,72 @@ import { NextResponse as response } from "next/server";
 import { isAdminRequest } from "../auth/[...nextauth]/route";
 
 export async function POST(request) {
-  await mongooseConnect();
-  await isAdminRequest();
-  const { name, parentCategory, properties } = await request.json();
-  const categoryDoc = await Category.create({
-    name,
-    parent: parentCategory || undefined,
-    properties,
-  });
-  return response.json(categoryDoc);
+  try {
+    await isAdminRequest();
+    await mongooseConnect();
+    const { name, parentCategory, properties } = await request.json();
+    const categoryDoc = await Category.create({
+      name,
+      parent: parentCategory || undefined,
+      properties,
+    });
+    return response.json(categoryDoc);
+  } catch (error) {
+    if (error === "not admin") {
+      return response.json({ error: "Not authorized" }, { status: 401 });
+    } else {
+      return response.json({ error: "Something went wrong" }, { status: 500 });
+    }
+  }
 }
-
+// TODO: Middleware de autorización de usuario
 export async function GET(request) {
-  await mongooseConnect();
-  await isAdminRequest();
-  return response.json(await Category.find().populate("parent"));
+  try {
+    await isAdminRequest();
+    await mongooseConnect();
+
+    return response.json(await Category.find().populate("parent"));
+  } catch (error) {
+    if (error === "not admin") {
+      return response.json({ error: "Not authorized" }, { status: 401 });
+    } else {
+      return response.json({ error: "Something went wrong" }, { status: 500 });
+    }
+  }
 }
 
 export async function PUT(request) {
-  await mongooseConnect();
-  const { name, parentCategory, properties, _id } = await request.json();
-  const categoryDoc = await Category.updateOne(
-    { _id },
-    { name, parent: parentCategory || undefined, properties }
-  );
-  return response.json(categoryDoc);
+  try {
+    await isAdminRequest();
+    await mongooseConnect();
+    const { name, parentCategory, properties, _id } = await request.json();
+    const categoryDoc = await Category.updateOne(
+      { _id },
+      { name, parent: parentCategory || undefined, properties }
+    );
+    return response.json(categoryDoc);
+  } catch (error) {
+    if (error === "not admin") {
+      return response.json({ error: "Not authorized" }, { status: 401 });
+    } else {
+      return response.json({ error: "Something went wrong" }, { status: 500 });
+    }
+  }
 }
 
 export async function DELETE(request) {
-  await mongooseConnect();
-  const _id = request.nextUrl.searchParams.get("id");
+  try {
+    await isAdminRequest();
+    await mongooseConnect();
+    const _id = request.nextUrl.searchParams.get("id");
 
-  await Category.deleteOne({ _id });
-  return response.json(true);
+    const deletedCategory = await Category.deleteOne({ _id });
+    return response.json(deletedCategory);
+  } catch (error) {
+    if (error === "not admin") {
+      return response.json({ error: "Not authorized" }, { status: 401 });
+    } else {
+      return response.json({ error: "Something went wrong" }, { status: 500 });
+    }
+  }
 }
