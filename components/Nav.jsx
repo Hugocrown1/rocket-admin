@@ -3,8 +3,6 @@ import {
   IconBoxSeam,
   IconCategory,
   IconLogout2,
-  IconPower,
-  IconRocket,
   IconSettings,
   IconTruckDelivery,
 } from "@tabler/icons-react";
@@ -34,35 +32,29 @@ export default function Nav() {
       name: "Ordenes",
       icon: <IconTruckDelivery />,
     },
-    {
-      route: "/settings",
-      name: "Ajustes",
-      icon: <IconSettings />,
-    },
   ];
 
-  //5:30:00
   return (
-    <aside className="bg-[#0a0908] min-w-fit w-[16%]">
-      {/* Banner */}
-      <Link
-        href={"/"}
-        className="flex flex-row bg-[#242423] text-white h-[7%] items-center justify-center gap-x-1"
-      >
-        <IconRocket color="white" size={40} />
-        <span className="font-medium text-2xl">Rocket Admin</span>
-      </Link>
+    <aside className="bg-[#0a0908] w-[250px]">
       {/* Rutas del dashboard */}
-      <nav className="p-4 text-white">
+      <nav className="py-4 text-white">
+        <p className="text-sm font-medium mx-2  text-gray-400">DASHBOARD</p>
         {routes.map((item, index) => (
           <Link
-            className="flex flex-row gap-x-2 p-2 rounded-md hover:bg-[#ffffff3d]"
+            className="flex flex-row gap-x-2 p-2 transition-colors px-4 hover:bg-[#f8f9fa] hover:text-black"
             key={index}
             href={item.route}
           >
             {item.icon} {item.name}
           </Link>
         ))}
+        <p className="text-sm font-medium mx-2 mt-2  text-gray-400">OPCIONES</p>
+        <Link
+          className="flex flex-row gap-x-2 p-2 transition-colors hover:bg-[#f8f9fa] hover:text-black"
+          href="/settings"
+        >
+          <IconSettings /> Ajustes
+        </Link>
         <button
           onClick={() =>
             signOut({
@@ -70,7 +62,7 @@ export default function Nav() {
               callbackUrl: "/",
             })
           }
-          className="flex flex-row gap-x-2 p-2 rounded-md w-full hover:bg-[#ffffff3d]"
+          className="flex flex-row gap-x-2 p-2  w-full transition-colors hover:bg-[#f8f9fa] hover:text-black"
         >
           <IconLogout2 /> Cerrar sesión
         </button>

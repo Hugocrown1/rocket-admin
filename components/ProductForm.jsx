@@ -97,14 +97,15 @@ export default function ProductForm({
 
   if (categories.length > 0 && category) {
     let categoryInfo = categories.find(({ _id }) => _id === category);
-    propertiesToFill.push(...categoryInfo.properties);
-
-    while (categoryInfo?.parent?._id) {
-      const parentCategory = categories.find(
-        ({ _id }) => _id === categoryInfo?.parent?._id
-      );
-      propertiesToFill.push(...parentCategory.properties);
-      categoryInfo = parentCategory;
+    if (categoryInfo) {
+      propertiesToFill.push(...categoryInfo.properties);
+      while (categoryInfo?.parent?._id) {
+        const parentCategory = categories.find(
+          ({ _id }) => _id === categoryInfo?.parent?._id
+        );
+        propertiesToFill.push(...parentCategory.properties);
+        categoryInfo = parentCategory;
+      }
     }
   }
 

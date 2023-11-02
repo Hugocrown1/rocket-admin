@@ -17,7 +17,7 @@ export async function POST(request) {
       description,
       price,
       images,
-      category,
+      category: category || undefined,
       properties,
     });
 

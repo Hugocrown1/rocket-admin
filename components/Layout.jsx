@@ -4,6 +4,7 @@ import Nav from "@/components/Nav";
 import { Spinner } from "@nextui-org/react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { redirect } from "next/navigation";
+import Header from "./Header";
 
 export default function Layout({ children }) {
   const { status } = useSession({
@@ -22,9 +23,12 @@ export default function Layout({ children }) {
   }
 
   return (
-    <div className="flex flex-row bg-[#f8f9fa] text-black min-h-screen">
-      <Nav />
-      <div className=" flex-grow p-4">{children}</div>
+    <div className="flex flex-col bg-[#f8f9fa] text-black">
+      <Header />
+      <div className="flex flex-row min-h-screen">
+        <Nav />
+        <main className="flex-grow p-4">{children}</main>
+      </div>
     </div>
   );
 }
