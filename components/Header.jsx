@@ -53,6 +53,13 @@ const Header = () => {
           </DropdownItem>
           <DropdownItem
             aria-label="avatar-logout"
+            key="settings"
+            color="default"
+          >
+            Ajustes
+          </DropdownItem>
+          <DropdownItem
+            aria-label="avatar-logout"
             key="logout"
             color="danger"
             onClick={() =>
