@@ -9,6 +9,7 @@ import {
 } from "@nextui-org/react";
 import { IconRocket } from "@tabler/icons-react";
 import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -23,18 +24,19 @@ const Header = () => {
         className="flex flex-row h-[7%] items-center justify-center gap-x-1"
       >
         <IconRocket color="white" size={40} />
-        <span className="font-medium text-2xl">Rocket Admin</span>
+        <span className="text-md min-[440px]:text-2xl font-medium ">
+          Rocket Admin
+        </span>
       </Link>
 
       <Dropdown>
         <DropdownTrigger>
-          <div className="flex space-x-3 text-sm text-white hover:cursor-pointer">
-            <Avatar
-              isBordered
-              as="button"
-              className="transition-transform"
-              name={session?.user?.name}
-              size="md"
+          <div className="flex space-x-3 text-sm items-center text-white hover:cursor-pointer">
+            <Image
+              className="rounded-full border-white border-2"
+              width={50}
+              height={50}
+              alt="Foto de perfil"
               src={session?.user?.image}
             />
             <p>

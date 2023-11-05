@@ -65,7 +65,7 @@ export default function Layout({ children }) {
           checked={active}
           onChange={() => setActive(!active)}
         />
-        <label className="toggle" for="checkbox">
+        <label className="toggle" htmlFor="checkbox">
           <div id="bar1" className="bars"></div>
           <div id="bar2" className="bars"></div>
           <div id="bar3" className="bars"></div>
@@ -73,23 +73,29 @@ export default function Layout({ children }) {
       </header>
 
       <div className="flex flex-row min-h-screen">
-        {active && (
-          <aside className="bg-[#0a0908] text-white p-2">
-            <nav>
-              <ul>
-                {routes.map((route, index) => (
-                  <li className="my-2" key={index}>
-                    <Link href={route.route}>
-                      <div className="flex flex-col items-center justify-center text-center">
-                        {route.icon} {route.name}
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </aside>
-        )}
+        <aside
+          className={`fixed bg-[#0a0908] min-[1100px]:hidden min-h-screen z-10 text-white transition-transform transform ${
+            active ? "translate-x-0" : "-translate-x-24"
+          }`}
+        >
+          <nav>
+            <ul>
+              {routes.map((route, index) => (
+                <li
+                  className="my-2 mx-2 border-b-1 border-gray-400/20"
+                  key={index}
+                >
+                  <Link href={route.route}>
+                    <div className="flex flex-col items-center justify-center text-center">
+                      {route.icon} {route.name}
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+
         <Nav />
         <main className="flex-grow p-4">{children}</main>
       </div>
