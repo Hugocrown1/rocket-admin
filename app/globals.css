@@ -28,11 +28,11 @@ table.basic {
 }
 
 table.basic thead td {
-  @apply bg-[#0a0908] font-medium
+  @apply text-black font-semibold
 }
 
 table.basic tr td {
-  @apply border p-1
+  @apply border-y border-gray-500/20 py-3 px-2
 }
 
 table.basic a {

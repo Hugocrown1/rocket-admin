@@ -35,7 +35,7 @@ export default function Nav() {
   ];
 
   return (
-    <aside className="bg-[#0a0908] w-[250px] hidden min-[1100px]:flex">
+    <aside className="bg-[#0a0908] min-w-[227px] hidden min-[1100px]:flex">
       {/* Rutas del dashboard */}
       <nav className="py-4 text-white w-full">
         <p className="text-sm font-medium mx-2  text-gray-400">DASHBOARD</p>

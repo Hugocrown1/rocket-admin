@@ -1,12 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 import { Spinner } from "@nextui-org/react";
-import { IconUpload } from "@tabler/icons-react";
+import { IconDots, IconUpload } from "@tabler/icons-react";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ReactSortable } from "react-sortablejs";
+
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownSection,
+  DropdownItem,
+} from "@nextui-org/dropdown";
 
 export default function ProductForm({
   _id,
@@ -160,40 +168,56 @@ export default function ProductForm({
         ))}
       {/* Fotos */}
       <label htmlFor="photos">Fotos</label>
-      <div className="flex flex-row mb-3 space-x-2 h-fit items-end">
+      <div className="flex flex-wrap mb-3 h-fit">
         <ReactSortable
-          className="flex space-x-2"
+          className="flex flex-wrap"
           list={images}
           setList={updateImagesOrder}
         >
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-rows-1 gap-2 h-fit">
-            {!!images?.length &&
-              images.map((link, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="relative h-32 w-32 inline-block rounded-md"
-                  >
-                    <img
-                      className="rounded-md max-h-32"
-                      src={link}
-                      alt={`fotografía del producto numero ${index + 1}`}
-                    />
-                  </div>
-                );
-              })}
-          </div>
+          {!!images?.length &&
+            images.map((link, index) => {
+              return (
+                <div
+                  key={index}
+                  className={`inline-block relative h-48 w-48 rounded-md m-1 `}
+                >
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <button className="absolute bg-gray-300/60 px-1 rounded-lg translate-x-1 translate-y-1">
+                        <IconDots />
+                      </button>
+                    </DropdownTrigger>
+                    <DropdownMenu aria-label="Image Actions">
+                      <DropdownItem key="view">Ver</DropdownItem>
+                      <DropdownItem
+                        key="delete"
+                        className="text-danger"
+                        color="danger"
+                      >
+                        Eliminar imagen
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                  <img
+                    className=" rounded-md h-full w-full"
+                    src={link}
+                    alt={`fotografía del producto numero ${index + 1}`}
+                  />
+                </div>
+              );
+            })}
         </ReactSortable>
         {isUploading && (
-          <div className="flex relative h-28 w-28 items-center justify-center">
+          <div className="flex relative h-48 w-48 items-center justify-center m-1">
             <Spinner size="lg" color="primary"></Spinner>
           </div>
         )}
+
         <label
           htmlFor="photos"
-          className="flex flex-col items-center justify-center w-28 h-28 bg-slate-300 rounded-md text-gray-500 cursor-pointer"
+          className="flex flex-col items-center m-1 justify-center w-48 h-48 bg-slate-300 rounded-md text-gray-500 text-2xl cursor-pointer"
         >
-          <IconUpload />
+          <IconUpload size={32} />
           Cargar
           <input
             id="photos"

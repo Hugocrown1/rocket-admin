@@ -27,15 +27,22 @@ export default function Products() {
       <table className="basic">
         <thead>
           <tr>
-            <td className="text-white">Nombre del producto</td>
-            <td className="text-white">Precio</td>
-            <td className="text-white">Acciones</td>
+            <td className=" w-fit">No.</td>
+            <td>Nombre del producto</td>
+            <td>Descripción</td>
+            <td>Precio</td>
+            <td>Acciones</td>
           </tr>
         </thead>
         <tbody>
           {products.map((product, index) => (
-            <tr key={index}>
+            <tr
+              className={`${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
+              key={index}
+            >
+              <td>{index + 1}</td>
               <td>{product.title}</td>
+              <td>{product.description}</td>
               <td>${product.price}</td>
               <td>
                 <Link

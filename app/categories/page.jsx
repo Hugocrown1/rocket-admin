@@ -238,13 +238,16 @@ const Categories = () => {
             <tr>
               <td>Nombre de la categoría</td>
               <td>Categoría padre</td>
-              <td></td>
+              <td>Acciones</td>
             </tr>
           </thead>
           <tbody className="text-black">
             {categories.length > 0 &&
               categories.map((category, index) => (
-                <tr key={index}>
+                <tr
+                  className={`${index % 2 === 0 ? "bg-gray-100" : "bg-white"}`}
+                  key={index}
+                >
                   <td>{category.name}</td>
                   <td>{category.parent?.name}</td>
                   <td>
