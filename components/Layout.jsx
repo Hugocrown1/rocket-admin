@@ -22,6 +22,7 @@ export default function Layout({ children }) {
       redirect("/login");
     },
   });
+
   const [active, setActive] = useState(false);
 
   if (status === "loading") {
@@ -74,7 +75,7 @@ export default function Layout({ children }) {
 
       <div className="flex flex-row min-h-screen">
         <aside
-          className={`fixed bg-[#0a0908] min-[1100px]:hidden min-h-screen z-10 text-white transition-transform transform ${
+          className={`absolute bg-[#0a0908] min-[1100px]:hidden min-h-screen z-10 text-white transition-transform transform ${
             active ? "translate-x-0" : "-translate-x-24"
           }`}
         >
@@ -97,7 +98,7 @@ export default function Layout({ children }) {
         </aside>
 
         <Nav />
-        <main className="flex-grow p-4">{children}</main>
+        <main className="relative flex-grow p-4">{children}</main>
       </div>
     </div>
   );

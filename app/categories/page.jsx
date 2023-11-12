@@ -256,7 +256,7 @@ const Categories = () => {
                       <IconEdit /> Editar
                     </button>
                     <button
-                      className="bg-blue-700 hover:bg-blue-800 text-white text-sm p-1 px-2 mr-2 rounded-md inline-flex gap-1 items-center
+                      className="bg-[#d90429] hover:bg-[#9e3345] text-white text-sm p-1 px-2 mr-2 rounded-md inline-flex gap-1 items-center
                     "
                       onClick={() => openModal(category)}
                     >

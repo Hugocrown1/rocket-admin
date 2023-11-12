@@ -3,6 +3,7 @@ import { Spinner } from "@nextui-org/react";
 import { IconUpload } from "@tabler/icons-react";
 import axios from "axios";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ReactSortable } from "react-sortablejs";
@@ -113,6 +114,7 @@ export default function ProductForm({
     <form className="my-2" onSubmit={saveProduct}>
       <label htmlFor="new_product">Nombre del producto</label>
       <input
+        required
         id="new_product"
         type="text"
         placeholder="Nombre del producto..."
@@ -158,27 +160,29 @@ export default function ProductForm({
         ))}
       {/* Fotos */}
       <label htmlFor="photos">Fotos</label>
-      <div className="flex flex-row mb-2 space-x-2">
+      <div className="flex flex-row mb-3 space-x-2 h-fit items-end">
         <ReactSortable
           className="flex space-x-2"
           list={images}
           setList={updateImagesOrder}
         >
-          {!!images?.length &&
-            images.map((link, index) => {
-              return (
-                <div
-                  key={index}
-                  className="relative h-28 w-28 inline-block rounded-md"
-                >
-                  <img
-                    className="rounded-md"
-                    src={link}
-                    alt={`fotografía del producto numero ${index + 1}`}
-                  />
-                </div>
-              );
-            })}
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-rows-1 gap-2 h-fit">
+            {!!images?.length &&
+              images.map((link, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="relative h-32 w-32 inline-block rounded-md"
+                  >
+                    <img
+                      className="rounded-md max-h-32"
+                      src={link}
+                      alt={`fotografía del producto numero ${index + 1}`}
+                    />
+                  </div>
+                );
+              })}
+          </div>
         </ReactSortable>
         {isUploading && (
           <div className="flex relative h-28 w-28 items-center justify-center">
@@ -202,6 +206,7 @@ export default function ProductForm({
 
       <label htmlFor="description">Descripción</label>
       <textarea
+        required
         id="description"
         placeholder="Descripción..."
         value={description}
@@ -209,15 +214,21 @@ export default function ProductForm({
       />
       <label htmlFor="price">Precio (MXN)</label>
       <input
+        required
         id="price"
         type="number"
         placeholder="Precio..."
         value={price}
         onChange={(e) => setPrice(e.target.value)}
       />
-      <button type="submit" className="primary-button w-28 mt-2">
-        Guardar
-      </button>
+      <div className="flex mt-2">
+        <button type="submit" className="primary-button ">
+          Guardar
+        </button>
+        <Link href={"/products"} className="red-button ">
+          Cancelar
+        </Link>
+      </div>
     </form>
   );
 }
