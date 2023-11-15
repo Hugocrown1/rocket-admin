@@ -73,11 +73,12 @@ export async function PUT(request) {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(request) {
   try {
     await isAdminRequest();
     await mongooseConnect();
     const id = request.nextUrl.searchParams.get("id");
+
     const deletedProduct = await Product.deleteOne({ _id: id });
 
     return response.json(deletedProduct);

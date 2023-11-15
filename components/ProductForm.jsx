@@ -102,6 +102,14 @@ export default function ProductForm({
     });
   };
 
+  //Desvincular link del producto
+  const deleteImage = async (imageLink) => {
+    const parts = imageLink.split("/");
+    const imageName = parts[parts.length - 1];
+
+    const response = await axios.delete(`/api/upload?image=${imageName}`);
+  };
+
   const propertiesToFill = [];
 
   if (categories.length > 0 && category) {
@@ -188,13 +196,18 @@ export default function ProductForm({
                       </button>
                     </DropdownTrigger>
                     <DropdownMenu aria-label="Image Actions">
-                      <DropdownItem key="view">Ver</DropdownItem>
+                      <DropdownItem aria-label="view-option" key="view">
+                        Ver
+                      </DropdownItem>
                       <DropdownItem
+                        aria-label="delete-image"
                         key="delete"
                         className="text-danger"
                         color="danger"
                       >
-                        Eliminar imagen
+                        <button onClick={() => deleteImage(link)}>
+                          Eliminar imagen
+                        </button>
                       </DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
