@@ -61,7 +61,14 @@ export async function PUT(request) {
       await request.json();
     const updatedProduct = await Product.updateOne(
       { _id },
-      { title, description, price, images, category, properties }
+      {
+        title,
+        description,
+        price,
+        images,
+        category: category || undefined,
+        properties,
+      }
     );
     return response.json(updatedProduct);
   } catch (error) {

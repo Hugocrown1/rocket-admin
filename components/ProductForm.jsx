@@ -15,6 +15,7 @@ import {
   DropdownSection,
   DropdownItem,
 } from "@nextui-org/dropdown";
+import { deleteImage } from "@/lib/deleteImage";
 
 export default function ProductForm({
   _id,
@@ -33,6 +34,8 @@ export default function ProductForm({
   const [productProperties, setProductProperties] = useState(
     assignedProperties || {}
   );
+
+  const [deletedImages, setDeletedImages] = useState("");
 
   const [isUploading, setIsUploading] = useState(false);
 
@@ -66,6 +69,16 @@ export default function ProductForm({
     } else {
       //Crear producto
       await axios.post("/api/products", data);
+    }
+
+    if (deletedImages.length > 0) {
+      for (const imageLink of deletedImages) {
+        try {
+          await deleteImage(imageLink);
+        } catch (error) {
+          console.error(`Error al eliminar la imagen ${imageLink}:`, error);
+        }
+      }
     }
     //Regresar a la pagina de productos
     router.push("/products");
@@ -102,12 +115,11 @@ export default function ProductForm({
     });
   };
 
-  //Desvincular link del producto
-  const deleteImage = async (imageLink) => {
-    const parts = imageLink.split("/");
-    const imageName = parts[parts.length - 1];
-
-    const response = await axios.delete(`/api/upload?image=${imageName}`);
+  const handleImageRemove = (imageLink) => {
+    setDeletedImages((prevDeletedImages) => [...prevDeletedImages, imageLink]);
+    setImages((prevImages) =>
+      prevImages.filter((image) => image !== imageLink)
+    );
   };
 
   const propertiesToFill = [];
@@ -205,7 +217,7 @@ export default function ProductForm({
                         className="text-danger"
                         color="danger"
                       >
-                        <button onClick={() => deleteImage(link)}>
+                        <button onClick={() => handleImageRemove(link)}>
                           Eliminar imagen
                         </button>
                       </DropdownItem>

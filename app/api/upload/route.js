@@ -74,7 +74,10 @@ export async function DELETE(request) {
       })
     );
 
-    return response.json(true);
+    return response.json(
+      { message: "Image deleted from bucket" },
+      { status: 200 }
+    );
   } catch (error) {
     if (error === "not admin") {
       return response.json({ error: "Not authorized" }, { status: 401 });

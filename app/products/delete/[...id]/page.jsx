@@ -2,6 +2,7 @@
 "use client";
 
 import Layout from "@/components/Layout";
+import { deleteImage } from "@/lib/deleteImage";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -28,7 +29,17 @@ export default function DeleteProduct() {
   };
 
   const deleteProduct = async () => {
+    if (productInfo.images.length > 0) {
+      for (const imageLink of productInfo.images) {
+        try {
+          await deleteImage(imageLink);
+        } catch (error) {
+          console.error(`Error al eliminar la imagen ${imageLink}:`, error);
+        }
+      }
+    }
     await axios.delete("/api/products?id=" + id);
+
     goBack();
   };
 
